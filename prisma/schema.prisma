@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String     @id @default(uuid())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  email              String    @unique
+  password           String
+  company            Company? @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  companyId          String?
+  passwordResetAt    DateTime?
+  passwordResetToken String?   @unique
+  role               Role    @default(BranchUser)
+  modules            Module[]
+  products           Product[]
+}
+
+model Module {
+   id                 String     @id @default(uuid())
+   createdAt          DateTime  @default(now())
+   updatedAt          DateTime  @updatedAt
+   name               ModuleName
+   controls           String[]
+   user               User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+   userId             String
+}
+
+model Product {
+  id                  String @id @default(uuid())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  count               Int
+  weight              Float
+  weightUom           Uom @relation(fields: [weightUomId],references: [id])
+  weightUomId         String
+  rate                Rate @relation(fields: [rateId], references: [id])
+  rateId              String
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId              String
+  Purchase_order      Purchase_order[]
+}
+
+model Product_variant {
+  id                  String @id @default(uuid())
+  sectionName         String
+  sectionNumber       Int @unique
+  width               Float?
+  height              Float?
+  thickness           Float?
+  outerDiameter       Float?
+  weight              String
+  rate                Rate[]
+}
+
+model Color {
+  id                  String @id @default(uuid())
+  color               String @unique
+  rate                Rate[]
+}
+
+model Product_type {
+  id                  String @id @default(uuid())
+  type                ProductType
+  subtype             ProductSubType
+  rate                Rate[]  
+}
+
+model Product_dimension {
+  id                  String @id @default(uuid())
+  height              Float
+  uom                 Uom @relation(fields: [uomId],references: [id])
+  uomId               String
+  rate                Rate[]
+}
+
+model Uom {
+  id                  String @id @default(uuid())
+  type                String @unique
+  product_dimensions  Product_dimension[]
+  Product             Product[]
+}
+
+model Rate {
+  id                  String @id @default(uuid())
+  rate                Float
+  variant             Product_variant @relation(fields: [variantId],references: [id], onDelete: Cascade, onUpdate: Cascade)
+  variantId           String
+  color               Color @relation(fields: [colorId],references: [id])
+  colorId             String
+  type                Product_type @relation(fields: [typeId],references: [id])
+  typeId              String
+  dimension           Product_dimension @relation(fields: [dimensionId],references: [id])
+  dimensionId         String
+  product             Product[]             
+}
+
+model Purchase_order{
+  id                  String @id @default(uuid())
+  products            Product[]
+  challan_number      Int @unique
+  order_number        Int @unique
+  customer_name       String
+  issued_date         DateTime @default(now())
+  has_raw_material    Boolean
+  net_weight          Float
+  cost_per_kg         Float
+  coating_amount      Float?
+  gross_amount        Float
+  coating_discount    Float?
+  net_amount          Float?
+  tax                 Float?
+  final_amount        Float
+}
+
+model Company{
+  id                  String @id @default(uuid())
+  name                String @unique
+  sub_company         Sub_company[]
+  user                User[]
+}
+
+model Sub_company{
+  id                  String @id @default(uuid())
+  name                String
+  company             Company[]
+}
+
+enum ProductType {
+  Anodized
+  Powdered
+}
+
+enum ProductSubType {
+  Plain
+  Normal
+  Standard
+  Premium
+}
+
+enum ModuleName {
+  User
+  Module
+  Color
+  Uom
+  Product_type
+  Product_dimension
+  Product_variant
+  Rate
+  Product
+  Purchase_order
+  Company
+  Sub_company
+}
+
+enum Role {
+SuperAdmin
+Admin
+BranchUser
+FactoryUser
+Labour
+}

@@ -1,0 +1,38 @@
+# File: apps/api-main-service/serverless.yml
+service: api-main-service
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs14.x
+  memorySize: 512
+  timeout: 10
+  endpointType: REGIONAL
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - 'node_modules/node-fetch/**'
+  excludeDevDependencies: true
+  individually: true
+
+functions:
+  main:
+    handler: apps/api-main-service/src/main.handler
+    events:
+      - http:
+          method: ANY
+          path: /api-main-service
+          cors:
+            origins:
+              - '*'
+      - http:
+          method: ANY
+          cors:
+            origins:
+              - '*'
+          path: "{proxy+}"
