@@ -7,4 +7,5 @@ export class CreateModuleDto {
 
   @StringValidator()
   userId: string;
+  controls: any;
 }

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   NumberValidator,
   StringValidator,
-} from '../../shared/common-dto/common.decorator';
+} from '../../../shared/common-dto/common.decorator';
 import { IsNumber } from 'class-validator';
 
 export class ProductDto {

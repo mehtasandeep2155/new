@@ -1,9 +1,9 @@
 import { Body, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CrudService } from '../../shared/crud-service/crud.service';
-import { PurchaseOrderTypeMap } from '../../shared/crud-service/models/mapType';
-import { prismaError } from '../../shared/error-handling/error-functions';
-import { PrismaService } from '../../shared/prisma/prisma.service';
+import { CrudService } from '../../../shared/crud-service/crud.service';
+import { PurchaseOrderTypeMap } from '../../../shared/crud-service/models/mapType';
+import { prismaError } from '../../../shared/error-handling/error-functions';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { PurchaseOrderDto } from './dto/purchaseorder.dto';
 
 @Injectable()

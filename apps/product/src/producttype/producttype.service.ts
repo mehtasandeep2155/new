@@ -8,9 +8,9 @@ import {
   PrismaClientUnknownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime';
-import { CrudService } from '../../shared/crud-service/crud.service';
-import { ProductCategoryTypeMap } from '../../shared/crud-service/models/mapType';
-import { PrismaService } from '../../shared/prisma/prisma.service';
+import { CrudService } from '../../../shared/crud-service/crud.service';
+import { ProductCategoryTypeMap } from '../../../shared/crud-service/models/mapType';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { ProductTypeDto } from './dto/product-type.dto';
 
 @Injectable()

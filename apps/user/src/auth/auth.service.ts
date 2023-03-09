@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt/dist';
-import { PrismaService } from '../../shared/prisma/prisma.service';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import {
   AuthDto,
   AuthSignInDto,

@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CrudService } from '../../shared/crud-service/crud.service';
-import { ColorTypeMap } from '../../shared/crud-service/models/mapType';
-import { prismaError } from '../../shared/error-handling/error-functions';
-import { PrismaService } from '../../shared/prisma/prisma.service';
+import { CrudService } from '../../../shared/crud-service/crud.service';
+import { ColorTypeMap } from '../../../shared/crud-service/models/mapType';
+import { prismaError } from '../../../shared/error-handling/error-functions';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { ColorDto } from './dto/color.dto';
 
 @Injectable()
