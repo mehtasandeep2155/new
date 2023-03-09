@@ -2,44 +2,41 @@ import * as dotenv from 'dotenv';
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import serverlessExpress from '@vendia/serverless-express';
-import {
-  Callback,
-  Context,
-  Handler,
-} from 'aws-lambda';
 import { ApiMainServiceModule } from './api-main-service.module';
+import { SwaggerModule } from '@nestjs/swagger';
+import { createDocument } from '../../swagger/swagger';
+import 'reflect-metadata';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 
 dotenv.config();
 
-let server: Handler;
-
-async function bootstrap(): Promise<Handler> {
+async function bootstrap() {
   const app = await NestFactory.create(
     ApiMainServiceModule,
+    { cors: true },
   );
-  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
-      forbidNonWhitelisted: true,
       whitelist: true,
-      stopAtFirstError: true,
     }),
   );
-
-  await app.init();
-
-  const expressApp = app
-    .getHttpAdapter()
-    .getInstance();
-  return serverlessExpress({ app: expressApp });
+  // app.connectMicroservice({
+  //   transport: Transport.TCP,
+  //   options: {
+  //     port: process.env.USER_PORT || 3302,
+  //   },
+  // });
+  SwaggerModule.setup(
+    'api/v1',
+    app,
+    createDocument(app),
+  );
+  await app.startAllMicroservices();
+  await app.listen(process.env.USER_PORT || 3302);
+  console.info(
+    'SERVER IS RUNNING ON PORT',
+    process.env.USER_PORT || 3302,
+  );
 }
-
-export const handler: Handler = async (
-  event: any,
-  context: Context,
-  callback: Callback,
-) => {
-  server = server ?? (await bootstrap());
-  return server(event, context, callback);
-};
+bootstrap();
